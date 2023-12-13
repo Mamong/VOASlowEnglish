@@ -1,8 +1,12 @@
+import 'package:audio_service/audio_service.dart';
+import 'package:audio_session/audio_session.dart';
 import 'package:domain_models/domain_models.dart';
 import 'package:feed_player/src/media_player.dart';
 import 'package:just_audio/just_audio.dart';
-//import 'package:just_audio_background/just_audio_background.dart';
+import 'package:just_audio_background/just_audio_background.dart';
 import 'package:rxdart/rxdart.dart';
+
+import 'audio_player_handler.dart';
 
 
 
@@ -10,12 +14,6 @@ class FeedAudioPlayer extends MediaPlayer {
   factory FeedAudioPlayer() => _singleton;
 
   FeedAudioPlayer._(){
-    // JustAudioBackground.init(
-    //   androidNotificationChannelId: 'com.ryanheise.bg_demo.channel.audio',
-    //   androidNotificationChannelName: 'Audio playback',
-    //   androidNotificationOngoing: true,
-    // );
-
     player = AudioPlayer();
     player.playerStateStream.listen((event) {
       if (event.processingState == ProcessingState.completed) {
@@ -29,8 +27,10 @@ class FeedAudioPlayer extends MediaPlayer {
     });
 
     player.positionStream.listen((event) async {
-      await _updatePosition(event);
+      await syncParagraphIndex(event);
     });
+
+    prepareSession();
   }
 
   static final FeedAudioPlayer _singleton = FeedAudioPlayer._();
@@ -87,6 +87,62 @@ class FeedAudioPlayer extends MediaPlayer {
   @override
   Stream<PlayerState> get playerStateStream => player.playerStateStream;
 
+  late AudioHandler _audioHandler;
+  late AudioPlayerHandler _playerHandler;
+  Future<void> prepareSession() async{
+    // _playerHandler = AudioPlayerHandler(player);
+    // _audioHandler = await AudioService.init(
+    //   builder: () => _playerHandler,
+    //   config: const AudioServiceConfig(
+    //     androidNotificationChannelId: 'com.ryanheise.myapp.channel.audio',
+    //     androidNotificationChannelName: 'Audio playback',
+    //     androidNotificationOngoing: true,
+    //   ),
+    // );
+
+    await JustAudioBackground.init(
+      androidNotificationChannelId: 'com.ryanheise.bg_demo.channel.audio',
+      androidNotificationChannelName: 'Audio playback',
+      androidNotificationOngoing: true,
+    );
+
+    final session = await AudioSession.instance;
+    await session.configure(const AudioSessionConfiguration.music());
+    session.interruptionEventStream.listen((event) {
+      if (event.begin) {
+        switch (event.type) {
+          case AudioInterruptionType.duck:
+          // Another app started playing audio and we should duck.
+            break;
+          case AudioInterruptionType.pause:
+          case AudioInterruptionType.unknown:
+          // Another app started playing audio and we should pause.
+            break;
+        }
+      } else {
+        switch (event.type) {
+          case AudioInterruptionType.duck:
+          // The interruption ended and we should unduck.
+            break;
+          case AudioInterruptionType.pause:
+          // The interruption ended and we should resume.
+          case AudioInterruptionType.unknown:
+          // The interruption ended but we should not resume.
+            break;
+        }
+      }
+    });
+
+    session.becomingNoisyEventStream.listen((_) {
+      // The user unplugged the headphones, so we should pause or lower the volume.
+    });
+
+    session.devicesChangedEventStream.listen((event) {
+      print('Devices added:   ${event.devicesAdded}');
+      print('Devices removed: ${event.devicesRemoved}');
+    });
+  }
+
   void updatePlayList(List<Feed> feeds) {
     _playList = List<Feed>.from(feeds);
     // final _playlist = ConcatenatingAudioSource(children: feeds.map((e) => AudioSource.uri(
@@ -127,8 +183,17 @@ class FeedAudioPlayer extends MediaPlayer {
     }
     _currentPIndexSubject.add(null);
 
-    _audioSource = LockCachingAudioSource(Uri.parse(feed.url!));
+    _audioSource = LockCachingAudioSource(
+        Uri.parse(feed.url!),
+        tag: MediaItem(
+          id: '$index',
+          album: feed.displayName,
+          title: feed.title,
+          artUri: Uri.parse(feed.image),
+        ),
+    );
     await player.setAudioSource(_audioSource);
+
     _audioSource.downloadProgressStream.listen((event) {
       _downloadProgressSubject.add(event);
       if (event == 1.0) {
@@ -171,7 +236,7 @@ class FeedAudioPlayer extends MediaPlayer {
     await player.play();
   }
 
-  Future<void> _updatePosition(Duration event) async {
+  Future<void> syncParagraphIndex(Duration event) async {
     if (currentFeed == null) return;
 
     final int index;

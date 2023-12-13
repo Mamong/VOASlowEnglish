@@ -189,9 +189,8 @@ class FeedDetailsViewState extends State<FeedDetailsView> {
     return Scaffold(
       extendBodyBehindAppBar: isVideo,
       appBar: AppBar(
-        forceMaterialTransparency:isVideo,
-        systemOverlayStyle:
-            isVideo ? SystemUiOverlayStyle.light : null,
+        forceMaterialTransparency: isVideo,
+        systemOverlayStyle: isVideo ? SystemUiOverlayStyle.light : null,
         backgroundColor: isVideo ? Colors.transparent : null,
         foregroundColor: isVideo ? Colors.white : null,
         actions: [
@@ -211,7 +210,7 @@ class FeedDetailsViewState extends State<FeedDetailsView> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         CachedNetworkImage(
-          imageUrl:feed.image,
+          imageUrl: feed.image,
           height: 200,
           width: double.infinity,
           fit: BoxFit.cover,
@@ -443,19 +442,12 @@ class FeedDetailsViewState extends State<FeedDetailsView> {
                     await _feedPlayer.tangleLoopMode();
                   },
                   onTapPrev: () async {
-                    if (selectedIndex == 0) {
-                      showToast("已经是第一段");
-                      return;
-                    }
                     int newIndex = selectedIndex - 1;
+                    newIndex = newIndex < 0 ? 0 : newIndex;
                     await _feedPlayer.seekToParagraph(newIndex);
                   },
                   onTapNext: () async {
-                    if (selectedIndex == feed.captions.length - 1) {
-                      showToast("已经是最后一段");
-                      return;
-                    }
-                    int newIndex = selectedIndex + 1;
+                    int newIndex = (selectedIndex + 1) % feed.captions.length;
                     await _feedPlayer.seekToParagraph(newIndex);
                   },
                   onTapSettings: () {},
@@ -463,16 +455,6 @@ class FeedDetailsViewState extends State<FeedDetailsView> {
               ],
             ));
       },
-    );
-  }
-
-  void showToast(String content) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(
-          content,
-        ),
-      ),
     );
   }
 }

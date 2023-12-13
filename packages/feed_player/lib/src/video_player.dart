@@ -57,8 +57,6 @@ class FeedVideoPlayer extends MediaPlayer {
   @override
   Stream<PlayerState> get playerStateStream => _playStateSubject.stream;
 
-  Feed? _lastFeed;
-
   List<Feed>? _playList;
 
   @override
@@ -90,7 +88,7 @@ class FeedVideoPlayer extends MediaPlayer {
 
       _durationSubject.add(controller.value.duration);
       _positionSubject.add(controller.value.position);
-      await _updatePosition(controller.value.position);
+      await syncParagraphIndex(controller.value.position);
 
       if (controller.value.isCompleted) {
         //播放下一首
@@ -134,7 +132,7 @@ class FeedVideoPlayer extends MediaPlayer {
     if (playList!.length - 1 < index) return;
 
     Feed feed = playList![index];
-    _lastFeed = feed;
+
     _currentPIndexSubject.add(null);
 
     //下载
@@ -184,7 +182,7 @@ class FeedVideoPlayer extends MediaPlayer {
     await player?.play();
   }
 
-  Future<void> _updatePosition(Duration event) async {
+  Future<void> syncParagraphIndex(Duration event) async {
     if (currentFeed == null) return;
 
     final int index;
