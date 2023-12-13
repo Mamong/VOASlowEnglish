@@ -1,0 +1,19 @@
+{
+  "signInButtonLabel": "登录",
+  "signedInUserGreeting": "你好, {username}!",
+  "@signedInUserGreeting": {
+    "placeholders": {
+      "username": {
+        "type": "String"
+      }
+    }
+  },
+  "updateProfileTileLabel": "更新资料",
+  "darkModePreferencesHeaderTileLabel": "主题模式",
+  "darkModePreferencesAlwaysDarkTileLabel": "暗色",
+  "darkModePreferencesAlwaysLightTileLabel": "亮色",
+  "darkModePreferencesUseSystemSettingsTileLabel": "系统",
+  "signOutButtonLabel": "退出",
+  "signUpOpeningText": "没有账户?",
+  "signUpButtonLabel": "注册"
+}

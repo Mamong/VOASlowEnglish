@@ -1,0 +1,2 @@
+class EmptySearchResultFavQsException implements Exception {}
+
