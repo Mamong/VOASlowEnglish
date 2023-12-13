@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "738757656787",
+    "project_id": "macro-precinct-304906",
+    "storage_bucket": "macro-precinct-304906.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:738757656787:android:fc8d8f7f13712f0438d426",
+        "android_client_info": {
+          "package_name": "com.example.flutter_demo"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAw1Aha_vcdg9xaGAPpWAeM2Fn5NXvs62c"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -20,14 +20,14 @@ import 'routing_table.dart';
 void main() async {
   // Has to be late so it doesn't instantiate before the
   // `initializeMonitoringPackage()` call.
-  late final errorReportingService = ErrorReportingService();
+  late ErrorReportingService errorReportingService;
 
   runZonedGuarded<Future<void>>(
     () async {
       WidgetsBinding widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
       FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
-
       await initializeMonitoringPackage();
+      errorReportingService = ErrorReportingService();
 // debugPaintSizeEnabled = true;
       //final remoteValueService = RemoteValueService();
       //await remoteValueService.load();
@@ -49,7 +49,7 @@ void main() async {
       );
       FlutterNativeSplash.remove();
     },
-    (error, stack) => errorReportingService.recordError(
+    (error, stack) => errorReportingService?.recordError(
       error,
       stack,
       fatal: true,
