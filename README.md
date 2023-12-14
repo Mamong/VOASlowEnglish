@@ -18,5 +18,6 @@ VOA慢速英语APP for flutter。主要实现了音频和视频两个tab，以�
 ![](https://raw.githubusercontent.com/Mamong/VOASlowEnglish/master/screenshot/7.png)
 ![](https://raw.githubusercontent.com/Mamong/VOASlowEnglish/master/screenshot/8.png)
 ![](https://raw.githubusercontent.com/Mamong/VOASlowEnglish/master/screenshot/9.png)
+![](https://raw.githubusercontent.com/Mamong/VOASlowEnglish/master/screenshot/10.png)
 
 
