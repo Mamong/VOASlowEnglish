@@ -119,22 +119,24 @@ class ControlButtons extends StatelessWidget {
       children: [
         StatefulBuilder(builder: (context, setState) {
           return Stack(
+            alignment: Alignment.center,
             children: [
+              Text(
+                modeName,
+                style: const TextStyle(fontSize: 9),
+              ),
               IconButton(
                   onPressed: () {
                     onTapLoop?.call();
                     setState(() => modeName = player.loopMode.name);
                   },
+                  style:IconButton.styleFrom(
+                    tapTargetSize: MaterialTapTargetSize.shrinkWrap
+                  ),
                   icon: const Icon(
                     Icons.loop,
-                    size: 24,
+                    size: 36,
                   )),
-              Positioned(
-                  right: 0,
-                  child: Text(
-                    modeName,
-                    style: const TextStyle(fontSize: 10),
-                  ))
             ],
           );
         }),
@@ -142,9 +144,12 @@ class ControlButtons extends StatelessWidget {
             onPressed: () {
               onTapPrev?.call();
             },
+            style:IconButton.styleFrom(
+                tapTargetSize: MaterialTapTargetSize.shrinkWrap
+            ),
             icon: const Icon(
               Icons.arrow_circle_up,
-              size: 24,
+              size: 36,
             )),
         StreamBuilder<PlayerState>(
           stream: player.playerStateStream,
@@ -156,8 +161,8 @@ class ControlButtons extends StatelessWidget {
             if (bufferedProgress < 1.0) {
               return Container(
                 margin: const EdgeInsets.all(8.0),
-                width: 42.0,
-                height: 42.0,
+                width: 48.0,
+                height: 48.0,
                 child: CircularProgressIndicator(
                   backgroundColor: Colors.grey[200],
                   valueColor: const AlwaysStoppedAnimation(Colors.blue),
@@ -170,25 +175,37 @@ class ControlButtons extends StatelessWidget {
                 processingState == ProcessingState.buffering) {
               return IconButton(
                 icon: const Icon(Icons.play_circle_outline),
-                iconSize: 42.0,
+                iconSize: 48.0,
+                style:IconButton.styleFrom(
+                    tapTargetSize: MaterialTapTargetSize.shrinkWrap
+                ),
                 onPressed: player.play,
               );
             } else if (playing != true) {
               return IconButton(
                 icon: const Icon(Icons.play_circle_outline),
-                iconSize: 42.0,
+                iconSize: 48.0,
+                style:IconButton.styleFrom(
+                    tapTargetSize: MaterialTapTargetSize.shrinkWrap
+                ),
                 onPressed: player.play,
               );
             } else if (processingState != ProcessingState.completed) {
               return IconButton(
                 icon: const Icon(Icons.pause_circle_outline),
-                iconSize: 42.0,
+                iconSize: 48.0,
+                style:IconButton.styleFrom(
+                    tapTargetSize: MaterialTapTargetSize.shrinkWrap
+                ),
                 onPressed: player.pause,
               );
             } else {
               return IconButton(
                 icon: const Icon(Icons.replay),
-                iconSize: 42.0,
+                iconSize: 48.0,
+                style:IconButton.styleFrom(
+                    tapTargetSize: MaterialTapTargetSize.shrinkWrap
+                ),
                 onPressed: () => player.seekTo(Duration.zero),
               );
             }
@@ -198,17 +215,23 @@ class ControlButtons extends StatelessWidget {
             onPressed: () {
               onTapNext?.call();
             },
+            style:IconButton.styleFrom(
+                tapTargetSize: MaterialTapTargetSize.shrinkWrap
+            ),
             icon: const Icon(
               Icons.arrow_circle_down,
-              size: 24,
+              size: 36,
             )),
         IconButton(
             onPressed: () {
               onTapSettings?.call();
             },
+            style:IconButton.styleFrom(
+                tapTargetSize: MaterialTapTargetSize.shrinkWrap
+            ),
             icon: const Icon(
               Icons.list,
-              size: 24,
+              size: 36,
             )),
       ],
     );

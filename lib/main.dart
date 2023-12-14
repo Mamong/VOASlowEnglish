@@ -6,6 +6,7 @@ import 'package:feed_repository/feed_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:key_value_storage/key_value_storage.dart';
 import 'package:monitoring/monitoring.dart';
 import 'package:domain_models/domain_models.dart';
@@ -49,7 +50,7 @@ void main() async {
       );
       FlutterNativeSplash.remove();
     },
-    (error, stack) => errorReportingService?.recordError(
+    (error, stack) => errorReportingService.recordError(
       error,
       stack,
       fatal: true,
@@ -99,31 +100,36 @@ class MyAppState extends State<MyApp> {
         return AppTheme(
           lightTheme: _lightTheme,
           darkTheme: _darkTheme,
-          child: MaterialApp.router(
-            theme: _lightTheme.materialThemeData,
-            darkTheme: _darkTheme.materialThemeData,
-            themeMode: darkModePreference?.toThemeMode(),
-            supportedLocales: const [
-              Locale('en', ''),
-              Locale('zh', ''),
-            ],
-            localizationsDelegates: const [
-              GlobalWidgetsLocalizations.delegate,
-              GlobalCupertinoLocalizations.delegate,
-              GlobalMaterialLocalizations.delegate,
-              AppLocalizations.delegate,
-              // ComponentLibraryLocalizations.delegate,
-              ProfileMenuLocalizations.delegate,
-              RefreshLocalizations.delegate,
-              // SignInLocalizations.delegate,
-              // ForgotMyPasswordLocalizations.delegate,
-              // SignUpLocalizations.delegate,
-              // UpdateProfileLocalizations.delegate,
-            ],
-            routerConfig: _router,
-            //routerDelegate: _routerDelegate,
-            //routeInformationParser: const RoutemasterParser(),
-          ),
+          child: ScreenUtilInit(
+              designSize: const Size(375, 667),
+              minTextAdapt: true,
+              splitScreenMode: true,
+            builder: (context , child) => MaterialApp.router(
+              theme: _lightTheme.materialThemeData,
+              darkTheme: _darkTheme.materialThemeData,
+              themeMode: darkModePreference?.toThemeMode(),
+              supportedLocales: const [
+                Locale('en', ''),
+                Locale('zh', ''),
+              ],
+              localizationsDelegates: const [
+                GlobalWidgetsLocalizations.delegate,
+                GlobalCupertinoLocalizations.delegate,
+                GlobalMaterialLocalizations.delegate,
+                AppLocalizations.delegate,
+                // ComponentLibraryLocalizations.delegate,
+                ProfileMenuLocalizations.delegate,
+                RefreshLocalizations.delegate,
+                // SignInLocalizations.delegate,
+                // ForgotMyPasswordLocalizations.delegate,
+                // SignUpLocalizations.delegate,
+                // UpdateProfileLocalizations.delegate,
+              ],
+              routerConfig: _router,
+              //routerDelegate: _routerDelegate,
+              //routeInformationParser: const RoutemasterParser(),
+            )
+          )
         );
       },
     );

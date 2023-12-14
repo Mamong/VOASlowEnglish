@@ -7,6 +7,7 @@ import 'package:feed_player/feed_player.dart';
 import 'package:feed_repository/feed_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:video_player/video_player.dart';
 
@@ -271,7 +272,7 @@ class FeedDetailsViewState extends State<FeedDetailsView> {
   Widget innerVideoPlayer() {
     VideoPlayerController? controller = (_feedPlayer as FeedVideoPlayer).player;
     double padding = MediaQuery.of(context).padding.top;
-    double headerHeight = 260;
+    double headerHeight = 200.h;
     return Container(
         height: headerHeight,
         alignment: Alignment.center,
